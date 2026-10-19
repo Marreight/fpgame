@@ -29,21 +29,19 @@ inputKey _ gstate = gstate -- Otherwise keep the same
 update :: Float -> GameState -> IO GameState
 update dt gstate = return $ gstate { elapsedTime = elapsedTime gstate + dt }
 
-type Position = (Float, Float)
-type Velocity = (Float, Float)
-
 data Player = Player{
-    playerPos::Position
+    playerPos::Point
 }
-times :: Float -> (Float, Float) -> (Float, Float)
+    
+times :: Float -> Point -> Point
 times x (a, b) = (a * x, b * x)
-plus :: (Float, Float) -> (Float, Float) -> (Float, Float)
+plus :: Point-> Point -> Point
 plus (a, a2) (b, b2) = (a + b, a2 + b2)
 
 class Movement a where
-    getPosition :: a -> Position
-    setPosition :: a -> Position -> a
-    move :: a -> Float -> Velocity -> a
+    getPosition :: a -> Point
+    setPosition :: a -> Point -> a
+    move :: a -> Float -> Vector -> a
     move c dt dir = setPosition c $ plus pos $ times dt dir
         where
             pos = getPosition c
