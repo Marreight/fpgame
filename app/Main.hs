@@ -21,11 +21,10 @@ input e gstate = return (inputKey e gstate)
 
 inputKey :: Event -> GameState -> GameState
 inputKey (EventKey (Char c) _ _ _) gameState = gameState
-inputKey (EventKey (SpecialKey KeyUp) _ _ _) gamestate = gamestate{ player = (moveleft $ player gamestate)}
-inputKey _ gstate = gstate -- Otherwise keep the same
+inputKey (EventKey (SpecialKey KeyUp) _ _ _) gamestate = gamestate{ player = move (player gamestate) 1.0 (0,100)}
+inputKey (EventKey (SpecialKey KeyDown) _ _ _) gamestate = gamestate{ player = move (player gamestate) 1.0 (0,-100)}
 
-moveleft :: Movement a => a -> a
-moveleft p = move p 1.0 (0,1)
+inputKey _ gstate = gstate -- Otherwise keep the same
 
 update :: Float -> GameState -> IO GameState
 update dt gstate = return $ gstate { elapsedTime = elapsedTime gstate + dt }
@@ -40,6 +39,7 @@ times :: Float -> (Float, Float) -> (Float, Float)
 times x (a, b) = (a * x, b * x)
 plus :: (Float, Float) -> (Float, Float) -> (Float, Float)
 plus (a, a2) (b, b2) = (a + b, a2 + b2)
+
 class Movement a where
     getPosition :: a -> Position
     setPosition :: a -> Position -> a
